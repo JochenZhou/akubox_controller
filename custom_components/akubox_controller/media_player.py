@@ -33,18 +33,18 @@ async def async_setup_entry(
     akubox_data = hass.data[DOMAIN][entry.entry_id]
     client: AkuBoxApiClient = akubox_data["client"]
     host: str = akubox_data["host"]
-# In media_player.py async_setup_entry
-# ...
+    # In media_player.py async_setup_entry
+    # ...
     volume_scan_interval = entry.options.get(
         "scan_interval_volume", UPDATE_INTERVAL_VOLUME # UPDATE_INTERVAL_VOLUME from const.py as default
     )
-    # Create a data update coordinator for volume
+    
     volume_coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
         name=f"{DEFAULT_NAME} Volume ({host})",
         update_method=client.get_volume,
-        update_interval=timedelta(seconds=UPDATE_INTERVAL_VOLUME),
+        update_interval=timedelta(seconds=volume_scan_interval), # Use the interval from options
     )
 
     # Fetch initial data
