@@ -56,19 +56,19 @@ async def async_setup_entry(
     akubox_data = hass.data[DOMAIN][entry.entry_id]
     client: AkuBoxApiClient = akubox_data["client"]
     host: str = akubox_data["host"] # Or derive from entry unique_id if preferred
-# In media_player.py async_setup_entry
-# ...
-    volume_scan_interval = entry.options.get(
-        "scan_interval_volume", UPDATE_INTERVAL_VOLUME # UPDATE_INTERVAL_VOLUME from const.py as default
+    # In sensor.py async_setup_entry
+    # ...
+    # Get scan interval from options, fallback to const if not set
+    system_scan_interval = entry.options.get(
+        "scan_interval_system", UPDATE_INTERVAL_SYSTEM # UPDATE_INTERVAL_SYSTEM from const.py as default
     )
-    # Create a data update coordinator for system info
+    
     system_coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
         name=f"{DEFAULT_NAME} System ({host})",
         update_method=client.get_system_info,
-        update_interval=timedelta(seconds=UPDATE_INTERVAL_SYSTEM),
-        # Optional: request_refresh_debouncer if needed
+        update_interval=timedelta(seconds=system_scan_interval), # Use the interval from options
     )
 
     # Fetch initial data so we have it when entities are added
