@@ -1,0 +1,7 @@
+{
+  "name": "AkuBox Controller",
+  "content_in_root": false,
+  "country": ["CN"],
+  "domains": ["sensor", "media_player"],
+  "homeassistant": "2023.1.0"
+}
