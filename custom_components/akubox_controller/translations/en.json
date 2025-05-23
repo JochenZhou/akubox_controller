@@ -1,34 +1,50 @@
 {
-    "config": {
-        "step": {
-            "user": {
-                "title": "Add AkuBox Device",
-                "description": "Enter the IP address of your AkuBox device.",
-                "data": {
-                    "host": "IP Address"
-                }
-            }
-        },
-        "error": {
-            "cannot_connect": "Failed to connect to the AkuBox device at this IP address. Check the IP and ensure the device is online.",
-            "invalid_auth": "Invalid authentication (although not currently used, check device settings if applicable).",
-            "unknown": "An unknown error occurred. Check Home Assistant logs.",
-            "already_configured": "This AkuBox device (IP Address) is already configured."
-        },
-        "abort": {
-            "already_configured": "Device with this IP address is already configured."
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add AkuBox Device",
+        "description": "Enter the IP address of your AkuBox device and optionally provide a custom name to easily identify it.",
+        "data": {
+          "host": "IP Address",
+          "custom_name": "Custom Name (e.g., Living Room AkuBox)"
         }
+      }
     },
-    "options": {
-        "step": {
-            "init": {
-                "title": "AkuBox Controller Options",
-                "description": "Adjust settings for your AkuBox device.",
-                "data": {
-                    "scan_interval_system": "System Info Update Interval (seconds)",
-                    "scan_interval_volume": "Volume Update Interval (seconds)"
-                }
-            }
-        }
+    "error": {
+      "cannot_connect": "Failed to connect to the AkuBox device at this IP address. Check the IP and ensure the device is online.",
+      "invalid_auth": "Invalid authentication (although not currently used, check device settings if applicable).",
+      "unknown": "An unknown error occurred. Check Home Assistant logs.",
+      "already_configured": "This AkuBox device (IP Address) is already configured."
+    },
+    "abort": {
+      "already_configured": "Device with this IP address is already configured."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "AkuBox Controller Options",
+        "description": "Adjust settings for your AkuBox device.",
+        "data": {
+          "scan_interval_system": "System Info Update Interval (seconds)",
+          "scan_interval_volume": "Volume Update Interval (seconds)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery_level": {
+        "name": "Battery Level"
+      }
+    },
+    "switch": {
+      "dlna_state_switch": {
+        "name": "DLNA Service"
+      },
+      "led_logo_state_switch": {
+        "name": "LED Logo Light"
+      }
+    }
+  }
 }

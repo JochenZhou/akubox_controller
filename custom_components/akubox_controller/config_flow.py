@@ -12,7 +12,9 @@ from .const import (
     DOMAIN,
     DEFAULT_NAME,
     UPDATE_INTERVAL_SYSTEM,
-    UPDATE_INTERVAL_VOLUME
+    UPDATE_INTERVAL_VOLUME,
+    CONF_CUSTOM_NAME,      # 新增
+    GENERIC_HOSTNAMES,     # 新增
 )
 from .api import AkuBoxApiClient, AkuBoxApiConnectionError, AkuBoxApiAuthError
 
@@ -20,6 +22,7 @@ _LOGGER = logging.getLogger(__name__)
 
 DATA_SCHEMA = vol.Schema({
     vol.Required(CONF_HOST): str,
+    vol.Optional(CONF_CUSTOM_NAME, default=""): str, # 新增自定义名称字段
 })
 
 class AkuBoxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -33,20 +36,40 @@ class AkuBoxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
         if user_input is not None:
             host = user_input[CONF_HOST]
+            custom_name = user_input.get(CONF_CUSTOM_NAME, "").strip()
 
-            await self.async_set_unique_id(host)
+            await self.async_set_unique_id(host) # Unique ID is still the host IP
             self._abort_if_unique_id_configured()
 
             session = async_get_clientsession(self.hass)
             client = AkuBoxApiClient(host, session)
+            entry_title: str
 
             try:
                 system_info = await client.get_system_info()
-                hostname = client.get_hostname_from_system_info(system_info) or host
+                api_hostname = client.get_hostname_from_system_info(system_info)
+
+                if custom_name:
+                    entry_title = custom_name
+                elif api_hostname and api_hostname.lower() not in GENERIC_HOSTNAMES:
+                    entry_title = f"{DEFAULT_NAME} ({api_hostname})"
+                else:
+                    entry_title = f"{DEFAULT_NAME} ({host})"
+
+                # Store the host and potentially the custom_name if needed elsewhere from entry.data
+                # For this purpose, only host is strictly needed in data for client re-creation.
+                # The title handles the display name.
+                config_data_to_store = {
+                    CONF_HOST: host,
+                    # CONF_CUSTOM_NAME: custom_name # Storing it if needed for other purposes
+                }
+                if custom_name: # Optionally store custom_name if provided
+                    config_data_to_store[CONF_CUSTOM_NAME] = custom_name
+
 
                 return self.async_create_entry(
-                    title=f"{DEFAULT_NAME} ({hostname})",
-                    data={CONF_HOST: host}
+                    title=entry_title,
+                    data=config_data_to_store
                 )
             except AkuBoxApiConnectionError:
                 errors["base"] = "cannot_connect"
@@ -54,12 +77,24 @@ class AkuBoxConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except AkuBoxApiAuthError:
                 errors["base"] = "invalid_auth"
                 _LOGGER.error("Authentication failed for AkuBox at %s", host)
-            except Exception as e: 
+            except Exception as e:
                 _LOGGER.exception("Unexpected exception during AkuBox setup at %s: %s", host, e)
                 errors["base"] = "unknown"
 
+        # Prepare schema with defaults (especially if coming back from an error)
+        current_host = ""
+        current_custom_name = ""
+        if user_input: # Repopulate form if there was an error
+            current_host = user_input.get(CONF_HOST, "")
+            current_custom_name = user_input.get(CONF_CUSTOM_NAME, "")
+
+        form_schema = vol.Schema({
+            vol.Required(CONF_HOST, default=current_host): str,
+            vol.Optional(CONF_CUSTOM_NAME, default=current_custom_name): str,
+        })
+
         return self.async_show_form(
-            step_id="user", data_schema=DATA_SCHEMA, errors=errors
+            step_id="user", data_schema=form_schema, errors=errors
         )
 
     @staticmethod
@@ -78,7 +113,7 @@ class AkuBoxOptionsFlowHandler(config_entries.OptionsFlow):
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> dict[str, Any]:
         """Manage the options."""
-        errors = {}
+        errors = {} # Not currently used for options validation but good practice
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
 

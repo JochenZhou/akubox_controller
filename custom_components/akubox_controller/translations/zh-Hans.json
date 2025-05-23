@@ -1,34 +1,50 @@
 {
-    "config": {
-        "step": {
-            "user": {
-                "title": "添加 AkuBox 设备",
-                "description": "请输入您的 AkuBox 设备的 IP 地址。",
-                "data": {
-                    "host": "IP 地址"
-                }
-            }
-        },
-        "error": {
-            "cannot_connect": "无法连接到此 IP 地址的 AkuBox 设备。请检查 IP 地址并确保设备在线。",
-            "invalid_auth": "无效的身份验证（虽然当前未使用，但如果适用，请检查设备设置）。",
-            "unknown": "发生未知错误。请检查 Home Assistant 日志。",
-            "already_configured": "此 AkuBox 设备 (IP 地址) 已配置。"
-        },
-        "abort": {
-            "already_configured": "具有此 IP 地址的设备已配置。"
+  "config": {
+    "step": {
+      "user": {
+        "title": "添加 AkuBox 设备",
+        "description": "请输入您的 AkuBox 设备的 IP 地址，并选择性地提供一个自定义名称以便轻松识别。",
+        "data": {
+          "host": "IP 地址",
+          "custom_name": "自定义名称 (例如 客厅 AkuBox)"
         }
+      }
     },
-    "options": {
-        "step": {
-            "init": {
-                "title": "AkuBox 控制器选项",
-                "description": "调整您的 AkuBox 设备的设置。",
-                "data": {
-                    "scan_interval_system": "系统信息更新间隔 (秒)",
-                    "scan_interval_volume": "音量更新间隔 (秒)"
-                }
-            }
-        }
+    "error": {
+      "cannot_connect": "无法连接到此 IP 地址的 AkuBox 设备。请检查 IP 地址并确保设备在线。",
+      "invalid_auth": "无效的身份验证（虽然当前未使用，但如果适用，请检查设备设置）。",
+      "unknown": "发生未知错误。请检查 Home Assistant 日志。",
+      "already_configured": "此 AkuBox 设备 (IP 地址) 已配置。"
+    },
+    "abort": {
+      "already_configured": "具有此 IP 地址的设备已配置。"
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "AkuBox 控制器选项",
+        "description": "调整您的 AkuBox 设备的设置。",
+        "data": {
+          "scan_interval_system": "系统信息更新间隔 (秒)",
+          "scan_interval_volume": "音量更新间隔 (秒)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "battery_level": {
+        "name": "电池电量"
+      }
+    },
+    "switch": {
+      "dlna_state_switch": {
+        "name": "DLNA 服务"
+      },
+      "led_logo_state_switch": {
+        "name": "LED Logo 灯"
+      }
+    }
+  }
 }
