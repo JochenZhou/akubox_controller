@@ -2,6 +2,8 @@
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/custom-components/hacs)
 
+提示:代码完全由AI生成，我也看不懂代码，必定存在未知风险，请自行承担使用此集成的风险。
+
 “AkuBox Controller”是一个 Home Assistant 自定义集成，用于通过本地 API 控制和监控 AkuBox 设备。它允许用户查看设备状态、控制媒体播放音量以及操作特定开关。
 
 ## 功能
