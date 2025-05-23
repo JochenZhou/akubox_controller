@@ -1,7 +1,6 @@
 {
   "name": "AkuBox Controller",
-  "content_in_root": false,
-  "filename": "akubox_controller", 
+  "render_readme": true,
   "country": ["CN"],
   "domains": ["sensor", "media_player", "switch"],
   "homeassistant": "2023.1.0"
