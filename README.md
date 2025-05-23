@@ -140,4 +140,10 @@
 ---
 ## 致谢
 
-本项目的部分代码和文档是在 Google AI 助手的协助下生成的。
+本项目在开发过程中得到了以下开发者和项目的帮助与启发，在此表示衷心感谢：
+
+* **zheng1**
+* **冰奇**
+* **AkuRobot 项目** ([https://github.com/jimieguang/AkuRobot](https://github.com/jimieguang/AkuRobot))
+
+此外，本项目的部分代码和文档是在 Google AI 助手的协助下生成的。
